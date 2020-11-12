@@ -10,11 +10,23 @@ import java.util.List;
  * The implementation does not need to order the list
  * 
  */
+
+	// access file
+	// read file line by line
+	// make sure to not have duplicates
+	// return list of string
+
+
 public interface ISymptomReader {
 	/**
 	 * If no data is available, return an empty List
 	 * 
-	 * @return a raw listing of all Symptoms obtained from a data source, duplicates are possible/probable
+	 * @return a raw listing of all Symptoms obtained from a data source, 
+	 * duplicates are possible/probable
 	 */
 	List<String> GetSymptoms ();
+	
+	// if no data/ empty file return empty list
+	// take care of duplicates
+	// return list of string
 }

@@ -5,9 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class AnalyticsCounter {
-	private static int headacheCount = 0;	// initialize to 0
-	private static int rashCount = 0;		// initialize to 0
-	private static int pupilCount = 0;		// initialize to 0
+	private static int headacheCount = 0;	
+	private static int rashCount = 0;		
+	private static int pupilCount = 0;		
 	
 	public static void main(String args[]) throws Exception {
 		// first get input
@@ -16,9 +16,9 @@ public class AnalyticsCounter {
 		String line = reader.readLine();
 		
 		//xx useless variable i taken out
-		//int i = 0;	// set i to 0
+		//int i = 0;
 		//xx useless variable headCount taken out
-		//int headCount = 0;	// counts headaches
+		//int headCount = 0;	
 		while (line != null) {
 			//i++;	// increment i
 			System.out.println("symptom from file: " + line);
@@ -30,7 +30,8 @@ public class AnalyticsCounter {
 			else if (line.equals("rash")) {
 				rashCount++;
 			}
-			else if (line.contains("pupils")) {
+			//xx wrong choice of name
+			else if (line.contains("dialated pupils")) {
 				pupilCount++;
 			}
 
