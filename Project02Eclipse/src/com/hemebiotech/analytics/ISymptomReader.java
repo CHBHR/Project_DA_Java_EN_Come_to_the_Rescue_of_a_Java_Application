@@ -1,6 +1,7 @@
 package com.hemebiotech.analytics;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Anything that will read symptom data from a source
@@ -10,13 +11,6 @@ import java.util.List;
  * The implementation does not need to order the list
  * 
  */
-
-	// access file
-	// read file line by line
-	// make sure to not have duplicates
-	// return list of string
-
-
 public interface ISymptomReader {
 	/**
 	 * If no data is available, return an empty List
@@ -26,7 +20,21 @@ public interface ISymptomReader {
 	 */
 	List<String> GetSymptoms ();
 	
-	// if no data/ empty file return empty list
-	// take care of duplicates
-	// return list of string
+	/**
+	 * 
+	 * Transforms the raw listing into a map with the symptoms and number of occurrences
+	 * 
+	 * @param listSymptom raw listing from GetSymptoms
+	 * @return 
+	 */
+	Map<String, Integer>  countSymptomOccurrence (List<String> listSymptom);
+	
+	/**
+	 * 
+	 * Writes the final list into a file
+	 * 
+	 * @param laMap 
+	 * @return 
+	 */
+	boolean ecrireSymptomeOccuranceDansFichier(Map<String, Integer> laMap);
 }
