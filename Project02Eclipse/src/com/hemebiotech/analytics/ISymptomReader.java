@@ -36,5 +36,5 @@ public interface ISymptomReader {
 	 * @param laMap 
 	 * @return 
 	 */
-	boolean ecrireSymptomeOccuranceDansFichier(Map<String, Integer> laMap);
+	boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> laMap);
 }

@@ -1,7 +1,9 @@
 package com.hemebiotech.analytics;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,16 +17,21 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 
 	private String filepath;
 	
-	/**
-	 * 
-	 * @param filepath a full or partial path to file with symptom strings in it, one per line
-	 */
 	public ReadSymptomDataFromFile (String filepath) {
 		this.filepath = filepath;
 	}
 	
+	public ReadSymptomDataFromFile() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * 
+	 * @param filepath a full or partial path to file with symptom strings in it, one per line
+	 */
 	@Override
 	public List<String> GetSymptoms() {
+		
 		ArrayList<String> result = new ArrayList<String>();
 		
 		if (filepath != null) {
@@ -56,24 +63,42 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	@Override
 	public Map<String, Integer> countSymptomOccurrence(List<String> listSymptom) {
 		
-		Map<String, Integer> SymptomOccurrence = new HashMap<String, Integer>();
+		Map<String, Integer> symptomOccurrence = new HashMap<String, Integer>();
 		
 		for (String i : listSymptom) {
-			Integer j = SymptomOccurrence.get(i);
-			SymptomOccurrence.put(i, (j==null)? 1: j+1);
+			Integer j = symptomOccurrence.get(i);
+			symptomOccurrence.put(i, (j==null)? 1: j+1);
 		}
-		return SymptomOccurrence;
+		return symptomOccurrence;
 	}
 
 	/**
 	 * 
+	 * Write the result in a new text file
+	 * 
 	 */
 	@Override
-	public boolean ecrireSymptomeOccuranceDansFichier(Map<String, Integer> SymptomOccurrence) {
-		// for(int i=0, max=hashmap.size(); i<max, i<n; i++) { ... }
-
+	public boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> symptomOccurrence) {
 		
-		return false;
+		try {
+			FileWriter writer = new FileWriter ("Project02Eclipse/testResult.out");
+			
+			for (Map.Entry<String,Integer> entry : symptomOccurrence.entrySet()) { 
+				writer.write(entry.getKey() + " : " + entry.getValue() + "\n");
+			}
+			
+			writer.close();
+		}catch(FileNotFoundException e) {
+			System.out.printf("ERROR - A %s occured: \n \t %s \n", e.getClass().toString(), e.getMessage());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.printf("fini !");
+		return true;
+		
 	}
+	
+	
 
 }
