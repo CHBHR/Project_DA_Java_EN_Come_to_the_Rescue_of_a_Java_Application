@@ -1,22 +1,35 @@
 package com.hemebiotech.analytics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.hemebiotech.analytics.exception.StreamUnclosableException;
+import com.hemebiotech.analytics.exception.WriterUnclosableException;
+
 public class NewAnalyticsCounter {
-	//
 	
-	public static void main(String[] args) throws Exception {		
+	public static void main(String[] args) {
 		
-		ReadSymptomDataFromFile testRun = new ReadSymptomDataFromFile("Project02Eclipse/symptoms.txt");
+		List<String> listeDesSymptomes = new ArrayList<String>();
 		
-		List<String> bla = testRun.GetSymptoms();
+		ReadSymptomDataFromFile nouvelleInstance = new ReadSymptomDataFromFile();
 		
-		Map<String, Integer> blu = testRun.countSymptomOccurrence(bla);
+		try {
+		listeDesSymptomes = nouvelleInstance.GetSymptoms("Project02Eclipse/symptoms.txt");
+		}catch(StreamUnclosableException e){
+			e.printStackTrace();
+		}
 		
-		testRun.writeSymtomAndOccurrencesInFile(blu);
+		Map<String, Integer> mapDesSymptomes = nouvelleInstance.countSymptomOccurrence(listeDesSymptomes);
+		
+		try {
+			nouvelleInstance.writeSymtomAndOccurrencesInFile(mapDesSymptomes);
+		}catch(WriterUnclosableException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
-
 
 }

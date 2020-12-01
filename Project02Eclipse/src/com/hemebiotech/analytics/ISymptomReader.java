@@ -3,6 +3,9 @@ package com.hemebiotech.analytics;
 import java.util.List;
 import java.util.Map;
 
+import com.hemebiotech.analytics.exception.StreamUnclosableException;
+import com.hemebiotech.analytics.exception.WriterUnclosableException;
+
 /**
  * Anything that will read symptom data from a source
  * The important part is, the return value from the operation, which is a list of strings,
@@ -11,14 +14,14 @@ import java.util.Map;
  * The implementation does not need to order the list
  * 
  */
-public interface ISymptomReader {
+public interface ISymptomReader{
 	/**
 	 * If no data is available, return an empty List
 	 * 
 	 * @return a raw listing of all Symptoms obtained from a data source, 
 	 * duplicates are possible/probable
 	 */
-	List<String> GetSymptoms ();
+	List<String> GetSymptoms (String filepath) throws StreamUnclosableException;
 	
 	/**
 	 * 
@@ -35,6 +38,7 @@ public interface ISymptomReader {
 	 * 
 	 * @param laMap 
 	 * @return 
+	 * @throws WriterUnclosableException 
 	 */
-	boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> laMap);
+	boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> laMap) throws WriterUnclosableException;
 }

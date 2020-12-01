@@ -6,46 +6,56 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
+import com.hemebiotech.analytics.exception.StreamUnclosableException;
+import com.hemebiotech.analytics.exception.WriterUnclosableException;
+
 /**
  * Simple brute force implementation
  *
  */
 public class ReadSymptomDataFromFile implements ISymptomReader {
-
-	private String filepath;
-	
-	public ReadSymptomDataFromFile (String filepath) {
-		this.filepath = filepath;
-	}
 	
 	public ReadSymptomDataFromFile() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
 	 * 
 	 * @param filepath a full or partial path to file with symptom strings in it, one per line
+	 * @throws IOException 
 	 */
 	@Override
-	public List<String> GetSymptoms() {
+	public List<String> GetSymptoms(String filepath) throws StreamUnclosableException {
 		
 		ArrayList<String> result = new ArrayList<String>();
 		
 		if (filepath != null) {
+						
 			try {
-				BufferedReader reader = new BufferedReader (new FileReader(filepath));
-				String line = reader.readLine();
+				BufferedReader reader = new BufferedReader (new FileReader(filepath)); //peut lever une exception type 'file not found'
+				String line = reader.readLine(); //peut lever une IOException
 				
 				while (line != null) {
 					result.add(line);
 					line = reader.readLine();
+					// ajouter un timer pour faire planter mon code
 				}
-				reader.close();
+				try {
+					reader.close();
+				} catch(IOException e) {
+					throw new StreamUnclosableException("Le stream ne s'est pas fermé correctement");
+				}
+				
+			} catch (FileNotFoundException s) {
+				s.getMessage();
+				System.out.println("Le fichier n'a pas été trouvé");
 			} catch (IOException e) {
 				e.printStackTrace();
+				System.out.println("le fichier ne peut pas être lu");
 			}
 		}
 		
@@ -63,12 +73,13 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	@Override
 	public Map<String, Integer> countSymptomOccurrence(List<String> listSymptom) {
 		
-		Map<String, Integer> symptomOccurrence = new HashMap<String, Integer>();
+		Map<String, Integer> symptomOccurrence = new TreeMap<String, Integer>();
 		
-		for (String i : listSymptom) {
-			Integer j = symptomOccurrence.get(i);
-			symptomOccurrence.put(i, (j==null)? 1: j+1);
+		for (String symptom : listSymptom) {
+			int occurences = Collections.frequency(listSymptom, symptom);
+			symptomOccurrence.put(symptom, occurences);
 		}
+
 		return symptomOccurrence;
 	}
 
@@ -78,27 +89,30 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	 * 
 	 */
 	@Override
-	public boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> symptomOccurrence) {
+	public boolean writeSymtomAndOccurrencesInFile(Map<String, Integer> symptomOccurrence) throws WriterUnclosableException {
 		
 		try {
-			FileWriter writer = new FileWriter ("Project02Eclipse/testResult.out");
+			FileWriter writer = new FileWriter ("Project02Eclipse/result.out"); // fileNotFoundException Peut être une exception fait maison
 			
-			for (Map.Entry<String,Integer> entry : symptomOccurrence.entrySet()) { 
+			for (Map.Entry<String,Integer> entry : symptomOccurrence.entrySet()) {
 				writer.write(entry.getKey() + " : " + entry.getValue() + "\n");
 			}
-			
-			writer.close();
-		}catch(FileNotFoundException e) {
-			System.out.printf("ERROR - A %s occured: \n \t %s \n", e.getClass().toString(), e.getMessage());
+			try {
+				writer.close();
+			} catch(IOException e) {
+				throw new WriterUnclosableException("Writer ne s'est pas fermé correctement");
+			}
+		
+		}catch(FileNotFoundException s) {
+			s.getMessage();
+			System.out.println("Le fichier n'a pas été trouvé");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.printf("fini !");
-		return true;
 		
+		return true;
 	}
-	
-	
 
 }
